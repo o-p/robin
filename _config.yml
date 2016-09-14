@@ -31,3 +31,8 @@ github_username:  o-p
 # Build settings
 markdown: kramdown
 theme: minima
+
+# Disqus
+disqus:
+  shortname: one-piece
+  
