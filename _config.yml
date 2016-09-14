@@ -24,7 +24,7 @@ description: >
   Then I'll quit being a pirate!
   I don't want to go on a boring adventure like that!
 baseurl: "/robin" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site
+url: "https://o-p.github.io/" # the base hostname & protocol for your site
 # twitter_username: jekyllrb
 github_username:  o-p
 
