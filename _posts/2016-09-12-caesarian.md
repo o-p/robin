@@ -2,7 +2,7 @@
 layout: post
 title:  "Caesarian"
 date:   2016-09-12 17:50:00 +0800
-categories: codefights
+categories: tricks
 tags: ["string to number", "number to string", "buffer"]
 ---
 
@@ -164,6 +164,7 @@ caesarian = (M, n) => {
 ```
 
 final:
+
 ```js
 // 65 chars
 B = Buffer
@@ -174,7 +175,6 @@ caesarian = (M, n) =>
           i => (i + 7 + n % 26) % 26 + 97
       )
   )
-
 ```
 
 以上, 就是nodejs only 的string <=> int 奇淫技巧
