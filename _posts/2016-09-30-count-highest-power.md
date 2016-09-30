@@ -14,15 +14,17 @@ tags: ["Hamming weight", "population count"]
 
 題目要求的是從1 到 N 之間所有數字, 每個數字各自最大的2<sup>n</sup>因數, n的加總.
 
+>
 > Let `H(N)` be the **highest power of 2** that divides `N`.
 > For example, `H(1) = 0`, since the highest power of 2 that divides `1` is **2<sup>0</sup>**,
 > and `H(6) = 1`, since **2<sup>1</sup>** divides `6`, but **2<sup>2</sup>** does not.
 > 
 > For the given `N`, find the sum of `H(K)` for all `K` in range `[1, N]`.
-> 
+>
 > ---
+>
 > ### Example
-> 
+>
 > For `N = "1"`, the output should be
 > `countHighestPower(N) = "0"`.
 > 
@@ -32,10 +34,11 @@ tags: ["Hamming weight", "population count"]
 > `countHighestPower(N) = "8"`.
 > 
 > The answer equals `H(1) + H(2) + H(3) + ... + H(10) = 0 + 1 + 0 + 2 + 0 + 1 + 0 + 3 + 0 + 1 = 8`.
-> 
+>
 > ---
+>
 > ### Input/Output
-> 
+>
 > - **[time limit]** 4000ms (js)
 >
 > - **[input]** string N
@@ -47,6 +50,7 @@ tags: ["Hamming weight", "population count"]
 >     1 ≤ N ≤ 10<sup>12</sup>.
 > 
 > - **[output]** string
+>
 
 ---
 
@@ -54,7 +58,7 @@ tags: ["Hamming weight", "population count"]
 
 依照到這邊的想法, 這時候開始實作的話, 可能步驟會是, 先找出 N 最接近的2<sup>n</sup> => 透過log2 或 toString(2), 然後每個數字依次往下測試.
 
-但這種從(0 | 1) ~ N 之間有多少個符合xxx規則的題目, 通常都有更有效率的找法, 就是反過來直接套規則找數字:
+但這種從 1 ~ N 之間有多少個符合xxx規則的題目, 通常都有更有效率的找法, 就是反過來直接套規則找數字:
 
 假設N是1026:
 
@@ -81,10 +85,9 @@ function countHighestPower(N) {
     return sum + ''
 }
 ```
+依照上面的code, 估計還可以縮個10來字, 不過跟第一名 42 chars落差太大, 決定找現成的論文
 
 ---
-
-依照上面的code, 估計還可以縮個10來字, 不過跟第一名 42 chars落差太大, 決定找現成的論文
 
 用寫好的function 帶入 1 ~ 10的結果 `[0, 1, 1, 3, 3, 4, 4, 7, 7, 8]`, 找到這篇: [a(n) = n minus (number of 1's in binary expansion of n). Also highest power of 2 dividing n!.](https://oeis.org/A011371)
 
@@ -92,25 +95,27 @@ function countHighestPower(N) {
 
 1. ```a(n) = a([n/2]) + [n/2] = [n/2] + [n/4] + [n/8] + [n/16] + ...```, 測試pass:
 
-    ```js
-    // 71 chars
-    F = N => N ? Math.floor(N / 2) + F(Math.floor(N/2)) : 0
-    countHighestPower = N => F(N) + ''
-    ```
+```js
+// 71 chars
+F = N => N ? Math.floor(N / 2) + F(Math.floor(N/2)) : 0
+countHighestPower = N => F(N) + ''
+```
+
 2. ```A(x) = 1/(1 - x)*Sum(k = 1, infinity, x^(2^k)/(1 - x^(2^k)))``` - 看來實作困難, 還有無限大, 直接放棄
 3. ```a(n) = n - A000120(n)``` => A000120: binary(n) 中 1 的總量, 確認可用:
 
-    ```js
-    // 62 chars
-    countHighestPower = N => N - ((+N).toString(2).split(1).length - 1) + ''
-    ```
+```js
+// 62 chars
+countHighestPower = N => N - ((+N).toString(2).split(1).length - 1) + ''
+```
+
 4. ```a(n) = A005187(n) - n, n >= 0.``` => A005187: ```a(n) = a(floor(n/2)) + n``` - 看來就是**方法1** 的進化版
 
-    ```js
-    // 60 chars
-    F = N => N ? F(Math.floor(N / 2)) + N : 0
-    countHighestPower = N => F(+N) - N + ''
-    ```
+```js
+// 60 chars
+F = N => N ? F(Math.floor(N / 2)) + N : 0
+countHighestPower = N => F(+N) - N + ''
+```
 
 ---
 
@@ -135,6 +140,7 @@ countHighestPower = n => {
     return n + ""   
 }
 ```
+
 到這看來就是**方法3** 的極限了, 目前幾乎所有X進位計算Y字數這類的題目,
 最短解幾乎都不是透過將字串轉成array後使用split, join, reduce等方法來實現,
 這也顯示出JavaScript String 方法的貧乏.
@@ -155,6 +161,7 @@ f = countHighestPower = N =>
  // N && +f(Math.floor(N / 2)) + Math.floor(N / 2)
     N && +f(N = Math.floor(N / 2)) + N + ''
 ```
+
 到這邊答案正確也超越**方法3** 了, 但為了轉型態跟無條件捨去, 花了很多字數.
 
 另外可以發現, 因為方程式前後都是將參數floor後計算, 也就是說其實參數是浮點數是沒差的, 改成 `f(N /= 2)`, 讓後面+N的部分來處理floor.
@@ -162,6 +169,7 @@ f = countHighestPower = N =>
 前面有提到, 這邊無法用 (N | 0)來捨去, 所以這邊出現了一個小技巧: `N - N % 1`
 
 變成:
+
 ```js
 // 43 chars
 f = countHighestPower = N => 
