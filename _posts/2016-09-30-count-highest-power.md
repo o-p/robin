@@ -93,27 +93,33 @@ function countHighestPower(N) {
 
 裡面提到幾個主要方法:
 
-1. ```a(n) = a([n/2]) + [n/2] = [n/2] + [n/4] + [n/8] + [n/16] + ...```, 測試pass:
-
-    ```
-    // 71 chars
-    F = N => N ? Math.floor(N / 2) + F(Math.floor(N/2)) : 0
-    countHighestPower = N => F(N) + ''
-    ```
+1. ```a(n) = a([n/2]) + [n/2] = [n/2] + [n/4] + [n/8] + [n/16] + ...```, 測試ok
 2. ```A(x) = 1/(1 - x)*Sum(k = 1, infinity, x^(2^k)/(1 - x^(2^k)))``` - 看來實作困難, 還有無限大, 直接放棄
-3. ```a(n) = n - A000120(n)``` => A000120: binary(n) 中 1 的總量, 確認可用:
-
-    ```
-    // 62 chars
-    countHighestPower = N => N - ((+N).toString(2).split(1).length - 1) + ''
-    ```
+3. ```a(n) = n - A000120(n)``` => A000120: binary(n) 中 1 的總量, 確認可用
 4. ```a(n) = A005187(n) - n, n >= 0.``` => A005187: ```a(n) = a(floor(n/2)) + n``` - 看來就是**方法1** 的進化版
 
-    ```
-    // 60 chars
-    F = N => N ? F(Math.floor(N / 2)) + N : 0
-    countHighestPower = N => F(+N) - N + ''
-    ```
+**方法1** 的測試:
+
+```js
+// 71 chars
+F = N => N ? Math.floor(N / 2) + F(Math.floor(N/2)) : 0
+countHighestPower = N => F(N) + ''
+```
+
+**方法3** 的測試:
+
+```js
+// 62 chars
+countHighestPower = N => N - ((+N).toString(2).split(1).length - 1) + ''
+```
+
+**方法4** 的測試:
+
+```js
+// 60 chars
+F = N => N ? F(Math.floor(N / 2)) + N : 0
+countHighestPower = N => F(+N) - N + ''
+```
 
 ---
 
