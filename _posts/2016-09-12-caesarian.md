@@ -1,13 +1,10 @@
 ---
 layout: post
-title:  "Caesarian"
 date:   2016-09-12 17:50:00 +0800
 categories: tricks
 tags: ["string to number", "number to string", "buffer"]
+title: 字元與數字互換的奇淫技巧
 ---
-
-# Caesarian
-
 
 **題目:** [Challenge "caesarian" - CodeFights](https://codefights.com/challenge/Nx88Ei5vnfib8SKD6)
 
@@ -82,6 +79,7 @@ function caesarian(message, n) {
 ```
 
 壓縮後, 維持 **parseInt** & **toString** 方法
+
 ```js
 // 88 chars
 caesarian = (M, n) =>
@@ -92,6 +90,7 @@ caesarian = (M, n) =>
 ```
 
 改用 **String.fromCharCode** & **charCodeAt**
+
 ```js
 // 85 chars
 String.fromCharCode(...[...M].map(v => (v.charCodeAt() + 7 + n % 26) % 26 + 97 ))
@@ -122,6 +121,7 @@ bufferFromArray.toString() // 'def'
 OK, 所以看來透過Buffer 可以更簡短的 String <=> Array<integer> 互換
 
 那就先來寫個人看的版本:
+
 ```js
 function caesarian(message, n) {
   var buffer = Buffer(message)
