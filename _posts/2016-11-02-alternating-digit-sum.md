@@ -97,4 +97,43 @@ AlternatingDigitSum = n =>  [0, 0, 1, 5, 1, 9, 4, 1, 4, 0, 9][n] + 1 | 0
 
 可是在這邊所有的數字的變成一位數了，似乎可以改成用字串:
 
-(待續)
+```js
+// 45 chars
+AlternatingDigitSum = n => '00151941409'[n] - 0 + 1 | 0
+```
+
+為了強迫讓字串轉成數字，沒辦法直接 +1, 所以一定要先 \*1 或 -0讓它當成數字來處理, 
+如果n超過字串範圍, 則變成 `Number(undefined) = NaN`, 所以最後`return 0`.
+
+現在很想將 - 0 這項拔除, 一般來說會用bitwise operator:
+
+```js
+// 43 chars, 但無法達成 n > 10 return 0 (因為~NaN => -1)
+AlternatingDigitSum = n => -~'00151941409'[n] | 0
+
+// 47 chars
+AlternatingDigitSum = n => -~('00151941409'[n] || -1)
+```
+
+看來主要問題在於bitwise 的操作對於NaN / 0 都沒區別,
+而我們這邊需要的是一個比 | 運算更早, 且處理到 undefined時會return NaN的operator.
+
+直接來看看所有[JS operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators), 才想到最直接的`++`還沒使用到, 所以來套入看看:
+
+```js
+// 43 chars
+AlternatingDigitSum = n => ++'00151941409'[n] | 0
+```
+
+到這邊很神奇的成功了, Magic!!
+
+最後則是利用這網站的小bug, 把'0' 換成 ' ' 省字數:
+
+```js
+// 40 chars
+AlternatingDigitSum = n => ++'  1519414 9'[n] | 0
+```
+
+這邊同時還利用到一個很神奇的特性, 就是`Number(' ') === 0`,  只有空字串或空白字元會是0, 而如果是其他字元, 則會是NaN, e.g. `Number('a') === NaN`.
+
+又是個JS無用的冷知識...
